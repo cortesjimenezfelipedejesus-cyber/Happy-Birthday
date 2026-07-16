@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fedac2, #fbc8d4);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Globos flotando al fondo */
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            bottom: -100px;
+            opacity: 0.8;
+            animation: floatUp 8s infinite linear;
+        }
+
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 18px;
+            width: 4px;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        /* Tarjeta de cumpleaños */
+        .card-container {
+            perspective: 1000px;
+            width: 350px;
+            height: 450px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            border-radius: 15px;
+        }
+
+        .card.open {
+            transform: rotateY(-180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Cara frontal (Portada) */
+        .card-front {
+            background-color: #ffffff;
+            color: #ff5e7e;
+        }
+
+        .card-front h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #ff5e7e;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .cake-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        .click-hint {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 30px;
+            font-style: italic;
+        }
+
+        /* Cara trasera (Mensaje interior) */
+        .card-back {
+            background-color: #ff5e7e;
+            color: #ffffff;
+            transform: rotateY(180deg);
+        }
+
+        .card-back h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .card-back p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Animaciones */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Globos decorativos generados por JS -->
+    <div id="balloon-container"></div>
+
+    <!-- Tarjeta Interactiva -->
+    <div class="card-container" onclick="toggleCard()">
+        <div class="card" id="birthdayCard">
+            <!-- Portada -->
+            <div class="card-front">
+                <div class="cake-emoji">🎂</div>
+                <h1>¡Feliz Cumpleaños!</h1>
+                <p>Haz clic para abrir tu tarjeta especial</p>
+                <p class="click-hint">Toca aquí ✨</p>
+            </div>
+            
+            <!-- Interior -->
+            <div class="card-back">
+                <h2>🎉 ¡Muchas Felicidades! 🎉</h2>
+                <p>Hoy es un día especial para celebrar tu vida. Te deseo un año lleno de sonrisas, salud, éxitos y momentos inolvidables.</p>
+                <p>¡Que todos tus deseos se cumplan hoy y siempre! 💖</p>
+                <span style="font-size: 2.5rem;">🎁🎈✨</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para abrir/cerrar la tarjeta
+        function toggleCard() {
+            const card = document.getElementById('birthdayCard');
+            card.classList.toggle('open');
+        }
+
+        // Generador de globos de colores aleatorios
+        const colors = ['#ff5e7e', '#ffdd59', '#4bc0c0', '#36a2eb', '#9966ff', '#ff9f40'];
+        const container = document.getElementById('balloon-container');
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            
+            // Posición horizontal aleatoria
+            balloon.style.left = Math.random() * 100 + 'vw';
+            
+            // Color aleatorio
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.backgroundColor = randomColor;
+            
+            // Velocidad y retraso aleatorios para que no suban todos al mismo tiempo
+            const duration = Math.random() * 4 + 6; // Entre 6s y 10s
+            balloon.style.animationDuration = duration + 's';
+            
+            container.appendChild(balloon);
+
+            // Eliminar el globo una vez que sale de la pantalla
+            setTimeout(() => {
+                balloon.remove();
+            }, duration * 1000);
+        }
+
+        // Crear un globo cada 800 milisegundos
+        setInterval(createBalloon, 800);
+    </script>
+</body>
+</html>
